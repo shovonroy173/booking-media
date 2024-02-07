@@ -1,24 +1,38 @@
 .login {
-    width: 100vw;
-    height: 100vh;
-    background-color: #f0f2f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-items: center;
+  height: 100vh;
+  /* background-color: #003580; */
   }
   
   .loginWrapper {
-    width: 70%;
-    height: 70%;
+    width: 100%;
+    background-color: #003580;
     display: flex;
+    justify-content: center;
   }
   
-  .loginLeft,
+  .loginTop{
+    width: 100%;
+  max-width: 1024px;
+  color: white;
+  font-size: 2rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  }
+  .loginTop h3{
+    color: white;
+  }
   .loginRight {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+  max-width: 1024px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   }
   
   .loginLogo {
@@ -35,6 +49,8 @@
   .loginBox{
       height: 300px;
       padding: 20px;
+  width: 50% ;
+
       background-color: white;
       border-radius: 10px;
       display: flex;
@@ -76,7 +92,7 @@
       height: 50px;
       border-radius: 10px;
       border: none;
-      background-color: #42b72a;
+      background-color: #003580;
       color: white;
       font-size: 20px;
       font-weight: 500;

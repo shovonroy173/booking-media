@@ -1,3 +1,4 @@
+import PersonIcon from '@mui/icons-material/Person';
 import { useState } from "react";
 import "./login.css";
 // import { useDispatch } from "react-redux";
@@ -23,13 +24,16 @@ export default function Login() {
   return (
     <div className="login">
       <div className="loginWrapper">
-        <div className="loginLeft">
-          <h3 className="loginLogo">social-media</h3>
-          <span className="loginDesc">
-            Connect with friends and the world around you on social-media.
-          </span>
+        <div className="loginTop">
+          <h3 className="loginLogo">booking-media</h3>
+          <PersonIcon/>
+        </div>
         </div>
         <div className="loginRight">
+          <div className="loginTitle">
+            <h1>Login</h1>
+            <p>Explore your destination!</p>
+          </div>
           <div className="loginBox">
             <input
               placeholder="Email"
@@ -53,6 +57,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }
