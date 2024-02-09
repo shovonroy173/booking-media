@@ -1,10 +1,10 @@
 // import { useDispatch } from "react-redux";
 // import { register } from "../../redux/apiCalls";
+import LockPersonIcon from '@mui/icons-material/LockPerson';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import PersonIcon from '@mui/icons-material/Person';
 import "./register.css";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ export default function Register() {
       <div className="registerWrapper">
         <div className="registerTop">
           <h3 className="registerLogo">booking-media</h3>
-          <PersonIcon/>
+          <LockPersonIcon/>
           </div>
         </div>
         <div className="registerRight">
