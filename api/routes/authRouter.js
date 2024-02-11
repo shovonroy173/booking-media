@@ -42,13 +42,11 @@ router.post("/login", async (req, res) => {
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT,
-        { expiresIn: "1d" }
+
       );
     //   const { oriPassword:password ,  ...otherDetails } = user._doc;
       return res
-        .cookie("access", token, {
-          httpOnly: true,
-        })
+        .cookie("access_token", token)
         .status(200)
         .json(user._doc);
     }

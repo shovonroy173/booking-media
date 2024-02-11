@@ -37,6 +37,11 @@ const hotelSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  featuredPhoto:{
+    type:String
+  }
+} , {
+  timestamps:true
 });
 
 export default model("Hotel" , hotelSchema);

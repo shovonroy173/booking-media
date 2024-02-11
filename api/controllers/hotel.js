@@ -1,6 +1,6 @@
 import { json } from "express";
-import Hotel from "../models/Hotel";
-import Room from "../models/Room";
+import Hotel from "../models/Hotel.js";
+import Room from "../models/Room.js";
 
 export const createHotel = async (req, res, next) => {
   const newHotel = new Hotel(req.body);
@@ -49,12 +49,13 @@ export const getHotel = async(req ,res , next) =>{
 };
 
 export const getHotels = async(req , res , next) => {
-    const {min , max , ...others} = req.query;
+    const {min , max , limit ,  ...others} = req.query;
+    // console.log(others);
     try {
         const hotels = await Hotel.find({
             ...others , 
             cheapestPrice :{$gt: min | 1 , $lt:max || 999} , 
-        }).limit(req.query.limit);
+        }).limit(limit);
         res.status(200).json(hotels);
     } catch (error) {
         next(error);
@@ -82,12 +83,19 @@ export const countByType = async(req , res , next)=>{
         const resortCount = await Hotel.countDocuments({type:"resort"});
         const villaCount = await Hotel.countDocuments({type:"villa"});
         const cabinCount = await Hotel.countDocuments({type:"cabin"});
+
+        const hotel = await Hotel.findOne({type:"hotel"});
+        const apartment = await Hotel.findOne({type:"apartment"});
+        const resort = await Hotel.findOne({type:"resort"});
+        const villa = await Hotel.findOne({type:"villa"});
+        const cabin = await Hotel.findOne({type:"cabin"});
+
 res.status(200).json([
-    {type:"hotel" , count: hotelCount} , 
-    {type:"apartment" , count: apartmentCount} , 
-    {type:"resort" , count: resortCount} , 
-    {type:"villa" , count: villaCount} , 
-    {type:"cabin" , count: cabinCount} , 
+    {type:"hotel" , count: hotelCount , photo:hotel?.photos[1]} , 
+    {type:"apartment" , count: apartmentCount , photo:apartment?.photos[1]} , 
+    {type:"resort" , count: resortCount , photo:resort?.photos[1]} , 
+    {type:"villa" , count: villaCount , photo:villa?.photos[1]} , 
+    {type:"cabin" , count: cabinCount , photo:cabin?.photos[1]} , 
 ]);
     } catch (error) {
         next(error)
