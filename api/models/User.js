@@ -9,6 +9,7 @@ const userSchema = new Schema(
       type: String,
       default: "user",
     },
+     bookings:{type:Array}
   },
   {
     timestamps: true,

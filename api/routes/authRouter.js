@@ -11,14 +11,14 @@ router.post("/register", async (req, res) => {
     // console.log(req.body);
     if (!name || !email || !password)
       return res.status(400).send("Insufficient Data");
-    const salt =  bcrypt.genSaltSync(10);
-    const hashedPassword =  bcrypt.hashSync(password, salt);
-    console.log("LINE AT 16" , hashedPassword);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    console.log("LINE AT 16", hashedPassword);
 
     const newUser = new User({
       name,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
       isAdmin,
     });
     await newUser.save();
@@ -41,18 +41,33 @@ router.post("/login", async (req, res) => {
       if (!validPassord) return res.status(401).json("Wrong Password");
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
-        process.env.JWT,
-
+        process.env.JWT
       );
-    //   const { oriPassword:password ,  ...otherDetails } = user._doc;
-      return res
-        .cookie("access_token", token)
-        .status(200)
-        .json(user._doc);
+      //   const { oriPassword:password ,  ...otherDetails } = user._doc;
+      return res.cookie("access_token", token).status(200).json(user._doc);
     }
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
+  }
+});
+
+router.put("/user/booking", async (req, res) => {
+  console.log(req.body);
+  const { userId, ...bookingDetails } = req.body;
+  try {
+    const bookingHotel = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: { bookings: bookingDetails },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(bookingHotel);
+  } catch (error) {
+    next(error);
   }
 });
 

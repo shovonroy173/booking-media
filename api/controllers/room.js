@@ -36,17 +36,17 @@ export const updateRoom = async (req, res, next) => {
 };
 
 export const updateRoomAvailability = async(req , res , next)=>{
+
     try {
-        await Room.updateOne(
-            {"roomNumbers._id": req.params.id} , 
-            {
-                $push:{
-                    "roomNumbers.$.unavailableDates" : req.body.dates
-                }
-            }
+        const updatedRoom = await Room.findOneAndUpdate(
+            {"roomNumbers._id": req.body.roomId} , 
+            { $addToSet: { "roomNumbers.$[elem].unavailableDates": req.body.dates } },
+            { arrayFilters: [{ "elem._id": req.body.roomId }], new: true }
+            
         );
-        res.status(200).json("Room status has been updated!");
+        res.status(200).json(updatedRoom);
     } catch (error) {
+      console.log(error);
         next(error);
     }
 };
