@@ -8,7 +8,6 @@ import "./reserve.css";
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 
@@ -71,7 +70,7 @@ console.log("LINE AT 60" , isFound);
     );
   };
   // console.log("LINE AT 59", selectedRooms);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
