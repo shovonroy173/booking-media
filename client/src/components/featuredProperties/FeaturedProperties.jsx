@@ -1,92 +1,80 @@
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import "./featuredProperties.css";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const FeaturedProperties = () => {
+  const [featuredProperties, setFeaturedProperties] = useState([]);
+  const [wait, setWait] = useState(true);
+  useEffect(() => {
+
+    const getHotel = async () => {
+      const res = await axios.get(
+        "http://localhost:5000/api/hotel?featured=true&limit=4"
+      );
+      setWait(false)
+      setFeaturedProperties(res.data);
+    };
+    getHotel();
+  }, []);
+
+  // console.log("LINE AT 22", featuredProperties);
 
   return (
     <div className="fp">
-        <div className="fpItem">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/square600/13125860.webp?k=e148feeb802ac3d28d1391dad9e4cf1e12d9231f897d0b53ca067bde8a9d3355&o=&s=1"
-            alt=""
-            className="fpImg"
-          />
-          <div className="fpDetails">
-            <div className="fpDetail">
-              <span className="fpName">Aparthotel Stare Miasto</span>
-              <span className="fpCity">Madrid</span>
-              <div className="fpRating">
-                <button>8.9</button>
-                <span>Excellent</span>
+      {wait ? 
+      (<Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+        
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop> ) : 
+      (<>
+      {featuredProperties?.map((item , index) => {
+        return (
+          <>
+            <Link
+              to={`/hotel/${item?._id}`}
+                
+                
+                state={item}
+              
+              style={{ textDecoration: "none", color: "inherit" }}
+              key={index}
+             
+            >
+              <div className="fpItem">
+                <img src={item?.featuredPhoto} alt="" className="fpImg" />
+                <div className="fpDetails">
+                  <div className="fpDetail">
+                    <span className="fpName">{item?.name}</span>
+                    <span className="fpCity">{item?.city}</span>
+                    <div className="fpRating">
+                      <button>{item?.rating}</button>
+                      <span>{`${
+                        item?.rating >= 4.5
+                          ? `Excellent`
+                          : item?.rating >= 4
+                          ? `Best`
+                          : "Good"
+                      }`}</span>
+                    </div>
+                  </div>
+                  <span className="fpPrice">
+                    Starting from <span>${item?.cheapestPrice}</span>
+                  </span>
+                </div>
               </div>
-            </div>
-            <span className="fpPrice">
-              Starting from <span>$120</span>
-            </span>
-          </div>
-        </div>
-        <div className="fpItem">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/215955381.jpg?k=ff739d1d9e0c8e233f78ee3ced82743ef0355e925df8db7135d83b55a00ca07a&o=&hp=1"
-            alt=""
-            className="fpImg"
-          />
-          <div className="fpDetails">
-            <div className="fpDetail">
-              <span className="fpName">Aparthotel Stare Miasto</span>
-              <span className="fpCity">Madrid</span>
-              <div className="fpRating">
-                <button>8.9</button>
-                <span>Excellent</span>
-              </div>
-            </div>
-            <span className="fpPrice">
-              Starting from <span>$120</span>
-            </span>
-          </div>
-        </div>
-        <div className="fpItem">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/232902339.jpg?k=3947def526b8af0429568b44f9716e79667d640842c48de5e66fd2a8b776accd&o=&hp=1"
-            alt=""
-            className="fpImg"
-          />
-          <div className="fpDetails">
-            <div className="fpDetail">
-              <span className="fpName">Aparthotel Stare Miasto</span>
-              <span className="fpCity">Madrid</span>
-              <div className="fpRating">
-                <button>8.9</button>
-                <span>Excellent</span>
-              </div>
-            </div>
-            <span className="fpPrice">
-              Starting from <span>$120</span>
-            </span>
-          </div>
-        </div>
-        <div className="fpItem">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/322658536.jpg?k=3fffe63a365fd0ccdc59210188e55188cdb7448b9ec1ddb71b0843172138ec07&o=&hp=1"
-            alt=""
-            className="fpImg"
-          />
-          <div className="fpDetails">
-            <div className="fpDetail">
-              <span className="fpName">Aparthotel Stare Miasto</span>
-              <span className="fpCity">Madrid</span>
-              <div className="fpRating">
-                <button>8.9</button>
-                <span>Excellent</span>
-              </div>
-            </div>
-            <span className="fpPrice">
-              Starting from <span>$120</span>
-            </span>
-          </div>
-        </div>
+            </Link>
+          </>
+        );
+      })}
+      </>)
+       }
+      
     </div>
   );
 };

@@ -7,6 +7,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import "./register.css";
 import { useState } from "react";
+import { register } from '../../redux/apiCalls';
+import {useDispatch} from "react-redux";
 
 export default function Register() {
   // const dispatch = useDispatch();
@@ -15,14 +17,15 @@ export default function Register() {
   const [password , setPassword] = useState("");
   const [passwordAgain , setPasswordAgain] = useState("");
   const [client , setClient] = useState("");
-  // const handleClick = ()=>{
-  //   if(password !== passwordAgain) {return alert('Passwords do not match');}
-  //   else{
-  //     register(dispatch , {name , email , password });
-  //   }
+  const dispatch = useDispatch();
+  const handleClick = ()=>{
+    if(password !== passwordAgain) {return alert('Passwords do not match');}
+    else{
+      register(dispatch , {name , email , password , client });
+    }
     
-  // }
-  console.log("LINE AT 14" , name , password , email , client);
+  }
+  // console.log("LINE AT 14" , name , password , email , client);
   return (
     <div className="register">
       <div className="registerWrapper">
@@ -43,7 +46,7 @@ export default function Register() {
             <input placeholder="Confirm Password" className="registerInput" type="password" onChange={((e)=>(setPasswordAgain(e.target.value)))} />
            
             <FormControl sx={{ m: 1, minWidth: 80 }}>
-        <InputLabel id="demo-simple-select-autowidth-label">Age</InputLabel>
+        <InputLabel id="demo-simple-select-autowidth-label">Type</InputLabel>
         <Select
           labelId="demo-simple-select-autowidth-label"
           id="demo-simple-select-autowidth"
@@ -52,16 +55,14 @@ export default function Register() {
           autoWidth
           label="Mode"
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
+ 
           <MenuItem value="admin">Admin</MenuItem>
           <MenuItem value="user">User</MenuItem>
           
         </Select>
       </FormControl>
     
-            {/* <button className="registerButton" onClick={handleClick}>Sign Up</button> */}
+            <button className="registerButton" onClick={handleClick}>Sign Up</button>
 
           </div>
         </div>

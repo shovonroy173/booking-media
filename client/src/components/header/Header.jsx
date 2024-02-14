@@ -12,6 +12,9 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { DateRangePicker } from "react-date-range";
 import { useState } from "react";
+import {useDispatch} from "react-redux"
+import { travelDetails } from "../../redux/apiCalls";
+
 // eslint-disable-next-line react/prop-types
 const Header = ({type}) => {
 
@@ -40,9 +43,13 @@ const Header = ({type}) => {
       };
     });
   };
+  const details = {destination , date , options};
+  // console.log("LINE AT 46" , details);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSearch = ()=>{
-    navigate("/list" , {state: {destination , options , date}})
+    travelDetails(dispatch , details)
+    navigate("/list" , {state: {destination , options , date}});
   }
 
   return (

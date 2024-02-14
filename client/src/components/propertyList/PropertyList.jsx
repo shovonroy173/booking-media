@@ -1,9 +1,63 @@
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import "./propertyList.css";
 
 const PropertyList = () => {
+  const [properties, setProperties] = useState([]);
+  const [wait, setWait] = useState(true);
+  useEffect(() => {
+    const getProperty = async () => {
+      const res = await axios.get(
+        "http://localhost:5000/api/hotel/countByType"
+      );
+      setWait(false);
+      setProperties(res.data);
+    };
+    getProperty();
+  }, []);
+  // console.log(properties);
+  properties?.map((pro) => {
+    console.log(pro?.count);
+  });
   return (
     <div className="pList">
-      <div className="pListItem">
+      {wait ? (
+        <>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={open}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </>
+      ) : (
+        <>
+          {properties?.map((item) => {
+            return (
+              <>
+                <div className="pListItem">
+                  <img src={item?.photo} alt="" className="pListImg" />
+                  <div className="pListTitles">
+                    <h1>
+                      {`${
+                        item.type.charAt(0).toUpperCase() + item.type.slice(1)
+                      }`}
+                      s
+                    </h1>
+                    <h2>
+                      {item?.count} {item?.type}s
+                    </h2>
+                  </div>
+                </div>
+              </>
+            );
+          })}
+        </>
+      )}
+
+      {/* <div className="pListItem">
         <img
           src="https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4e9b9b75480bbe7fc675460a089ba6414fe4693b83ea3fdd8e938832a6&o="
           alt=""
@@ -57,7 +111,7 @@ const PropertyList = () => {
           <h1>Cabins</h1>
           <h2>2331 hotels</h2>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

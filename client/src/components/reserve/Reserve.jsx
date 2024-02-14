@@ -1,6 +1,8 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
+import {loadStripe} from '@stripe/stripe-js';
+
 
 import "./reserve.css";
 import { useEffect, useState } from "react";
@@ -9,7 +11,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const Reserve = ({ setOpen, hotelId }) => {
+
+
+const KEY = "pk_test_51N55v0SG4487ZVYHjPu1nZv0uWzyK13KJsIB6oxLWsfcYbuG85TG2sD31jmnAWLbE8l5NKiTXC7O5mrW1LE0YGxh00XlH0rs0X";
+// console.log("LINE AT 17" , KEY);
+
+// eslint-disable-next-line react/prop-types
+const Reserve = ({ setOpen, hotelId , price}) => {
+  
   const [sucbar , setSucbar] = useState(false);
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -20,7 +29,7 @@ const Reserve = ({ setOpen, hotelId }) => {
     };
     getRooms();
   }, []);
-  console.log("LINE AT 20", rooms);
+  // console.log("LINE AT 20", rooms);
   const user = useSelector((state) => state.user);
   const userId = user?.currentUser?._id;
   const details = useSelector((state) => state.travel);
@@ -44,13 +53,13 @@ const Reserve = ({ setOpen, hotelId }) => {
 
   const alldates = getDatesInRange(dates[0].startDate, dates[0].endDate);
 
-  //   const isAvailable = (roomNumber) => {
-  //     const isFound = roomNumber.unavailableDates.some((date) =>
-  //       alldates.includes(new Date(date).getTime())
-  //     );
-
-  //     return !isFound;
-  //   };
+    const isAvailable = (roomNumber) => {
+      const isFound = roomNumber.unavailableDates.some((date) =>
+        alldates.includes(new Date(date).getTime())
+      );
+console.log("LINE AT 60" , isFound);
+      return !isFound;
+    };
 
   const handleSelect = (e) => {
     const checked = e.target.checked;
@@ -61,7 +70,7 @@ const Reserve = ({ setOpen, hotelId }) => {
         : selectedRooms.filter((item) => item !== value)
     );
   };
-  console.log("LINE AT 59", selectedRooms);
+  // console.log("LINE AT 59", selectedRooms);
   const navigate = useNavigate();
 
   const handleClick = async () => {
@@ -83,10 +92,22 @@ const Reserve = ({ setOpen, hotelId }) => {
         selectedRooms,
         userId,
       });
-
       setOpen(false);
       setSucbar(true);
-      navigate("/");
+      const stripe = await loadStripe(KEY);
+      const res = await axios.post("http://localhost:5000/api/checkout/payment" , {
+     hotelId,
+        selectedRooms,
+       userId,
+       price
+       });
+      const result = stripe.redirectToCheckout({
+        sessionId: res.data.id
+      });
+      if((await result).error){
+        console.log((await result).error);
+      }
+      // navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -108,9 +129,9 @@ const Reserve = ({ setOpen, hotelId }) => {
               <div className="rTitle">{item.title}</div>
               <div className="rDesc">{item.desc}</div>
               <div className="rMax">
-                Max people: <b>{item.maxPeople}</b>
+                Max people: <b>{item?.maxPeople}</b>
               </div>
-              <div className="rPrice">{item.price}</div>
+              <div className="rPrice">Price : ${item?.price}/night</div>
             </div>
             <div className="rSelectRooms">
               {item.roomNumbers.map((roomNumber) => (
@@ -121,7 +142,7 @@ const Reserve = ({ setOpen, hotelId }) => {
                       type="checkbox"
                       value={roomNumber._id}
                       onChange={handleSelect}
-                      // disabled={!isAvailable(roomNumber)}
+                      disabled={!isAvailable(roomNumber)}
                     />
                   </div>
                 </>
@@ -129,9 +150,11 @@ const Reserve = ({ setOpen, hotelId }) => {
             </div>
           </div>
         ))}
+
         <button onClick={handleClick} className="rButton">
           Reserve Now!
         </button>
+
       </div>
     </div>
   );
