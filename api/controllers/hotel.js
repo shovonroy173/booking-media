@@ -22,7 +22,7 @@ export const updateHotel = async (req, res, next) => {
       },
       { new: true }
     );
-    res.status(200).json(updateHotel);
+    res.status(200).json(updatedHotel);
   } catch (error) {
     next(error);
   }
@@ -49,11 +49,12 @@ export const getHotel = async(req ,res , next) =>{
 };
 
 export const getHotels = async(req , res , next) => {
-    const {min , max , limit ,  ...others} = req.query;
+    const {min , max , limit , city , ...others } = req.query;
     // console.log(others);
     try {
         const hotels = await Hotel.find({
             ...others , 
+            city:{ $regex: city || "" , $options:"i" } , 
             cheapestPrice :{$gt: min | 1 , $lt:max || 999} , 
         }).limit(limit);
         res.status(200).json(hotels);

@@ -41,7 +41,7 @@ export const updateRoomAvailability = async(req , res , next)=>{
         const updatedRoom = await Room.findOneAndUpdate(
             {"roomNumbers._id": req.body.roomId} , 
             { $addToSet: { "roomNumbers.$[elem].unavailableDates": req.body.dates } },
-            { arrayFilters: [{ "elem._id": req.body.roomId }], new: true }
+            { arrayFilters: [{ "elem._id": "roomNumbers._id" }], new: true }
             
         );
         res.status(200).json(updatedRoom);
@@ -84,3 +84,19 @@ export const getRooms = async(req , res , next) =>{
         next(error);
     }
 };
+
+export const getBookedRoomsClear = async(req , res , next) =>{
+  try {
+      const room = await Room.findOneAndUpdate({"roomNumbers._id":req.params.roomId} , 
+      {
+        $unset:
+        {"roomNumbers.$[elem].unavailableDates":1}
+      } , {new:true , arrayFilters: [{ "elem._id": req.body.roomId } ]}
+      );
+      console.log(room);
+      res.status(200).json(room);
+  } catch (error) {
+      next(error);
+  }
+};
+

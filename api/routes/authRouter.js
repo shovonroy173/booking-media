@@ -53,13 +53,13 @@ router.post("/login", async (req, res) => {
 });
 
 router.put("/user/booking", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { userId, ...bookingDetails } = req.body;
   try {
     const bookingHotel = await User.findByIdAndUpdate(
       userId,
       {
-        $set: { bookings: bookingDetails },
+        $push: { bookings: bookingDetails },
       },
       {
         new: true,
@@ -70,5 +70,26 @@ router.put("/user/booking", async (req, res) => {
     next(error);
   }
 });
+
+router.get("/find/:id" , async(req , res)=>{
+  try {
+    const user = await User.findById({_id:req.params.id});
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.put("/delete/:hotelId/:userId" , async(req , res)=>{
+  try {
+    const item = await User.findByIdAndUpdate(req.params.userId , 
+      { $pull: { "bookings": { "hotelId.id": req.params.hotelId } } }
+     , {new:true});
+    res.status(200).json(item);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 
 export default router;
