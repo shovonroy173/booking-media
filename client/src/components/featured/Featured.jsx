@@ -10,7 +10,7 @@ const Featured = () => {
 
   useEffect(() => {
     const getCityProperty = async () => {
-      const res = await axios.get("http://localhost:5000/api/city/");
+      const res = await axios.get("https://booking-media-api.onrender.com/api/city/");
       setWait(false);
       setCities(res.data);
     };

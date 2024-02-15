@@ -12,7 +12,7 @@ const FeaturedProperties = () => {
 
     const getHotel = async () => {
       const res = await axios.get(
-        "http://localhost:5000/api/hotel?featured=true&limit=4"
+        "https://booking-media-api.onrender.com/api/hotel?featured=true&limit=4"
       );
       setWait(false)
       setFeaturedProperties(res.data);

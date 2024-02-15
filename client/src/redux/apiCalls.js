@@ -5,7 +5,7 @@ import { travelFailure, travelStart, travelSuccess } from "./travelRedux";
 export const register = async(dispatch , user)=>{
     dispatch(loginStart());
     try {
-        const res = await axios.post("http://localhost:5000/api/auth/register" , user);
+        const res = await axios.post("https://booking-media-api.onrender.com/api/auth/register" , user);
         dispatch(loginSuccess(res.data));
     } catch (error) {
         dispatch(loginFailure());
