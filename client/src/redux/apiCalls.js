@@ -17,7 +17,7 @@ export const register = async(dispatch , user)=>{
 export const login = async(dispatch , user)=>{
     dispatch(loginStart());
     try {
-        const res = await axios.post("http://localhost:5000/api/auth/login" , user);
+        const res = await axios.post("https://booking-media-api.vercel.app/login" , user);
         dispatch(loginSuccess(res.data));
     } catch (error) {
         dispatch(loginFailure());
